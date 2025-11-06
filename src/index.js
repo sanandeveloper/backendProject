@@ -1,6 +1,24 @@
 import dotenv from "dotenv";
+dotenv.config();
+
+import connectDB from "./db/db.js";
 import app from "./app.js";
+import serverless from "serverless-http";
 
-dotenv.config({ path: "./.env" });
+const handler = serverless(app);
 
-console.log("✅ Backend initialized");
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+connectDB()
+  .then(() => {
+    console.log("✅ MongoDB connected successfully!");
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB connection failed:", err);
+  });
+
+export default handler;
