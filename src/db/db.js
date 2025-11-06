@@ -1,16 +1,25 @@
 import mongoose from "mongoose";
 import { DB_NAME } from "../constant.js";
 
+let isConnected = false; // Prevent multiple connections on Vercel
 
+export const connectDB = async () => {
+  if (isConnected) {
+    console.log("🟢 Using existing MongoDB connection");
+    return;
+  }
 
-const connectDB = async () => {
-    try {
-        const connectionInstance = await mongoose.connect(`${process.env.MONGODB_URI}/${DB_NAME}`)
-        console.log(`\n MongoDB connected !! DB HOST: ${connectionInstance.connection.host}`);
-    } catch (error) {
-        console.log("MONGODB connection FAILED ", error);
-        process.exit(1)
-    }
-}
+  try {
+    const connectionInstance = await mongoose.connect(`${process.env.MONGODB_URI}/${DB_NAME}`, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 30000
+    });
 
-export default connectDB
+    isConnected = connectionInstance.connections[0].readyState;
+    console.log(`✅ MongoDB connected! DB Host: ${connectionInstance.connection.host}`);
+  } catch (error) {
+    console.error("❌ MongoDB connection FAILED:", error);
+    throw error;
+  }
+};
