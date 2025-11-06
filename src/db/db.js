@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 
 
-let isConnected = false; // Prevent multiple connections on Vercel
-
+let isConnected = false; 
 export const connectDB = async () => {
   if (isConnected) {
     console.log("🟢 Using existing MongoDB connection");
