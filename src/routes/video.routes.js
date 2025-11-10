@@ -1,25 +1,22 @@
 import express, { Router } from "express";
-import serverless from "serverless-http";
-import multer from "multer";
+
+import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 import {
+  addComment,
   deleteLike,
   getAllvideo,
   getsingleVideo,
   getUserVideoCount,
+  getVideoComments,
   likeVideo,
   publishVideo,
 } from "../contollers/video.controller.js";
 
 const videoRouter = Router();
 
-// Multer setup
-const storage = multer.memoryStorage(); // store files in memory (works for serverless)
-const upload = multer({ storage });
-
 // Routes
-videoRouter.post(
-  "/upload-video",
+videoRouter.route("/upload-video").post(
   verifyJwt,
   upload.fields([
     { name: "videoFile", maxCount: 1 },
@@ -28,8 +25,10 @@ videoRouter.post(
   publishVideo,
 );
 
+videoRouter.route("/:id/comments").post(verifyJwt, addComment);
+videoRouter.route("/:id/getcomments").post(getVideoComments );
 videoRouter.route("/get-video").get(getAllvideo);
-videoRouter.route("/:id").get(getsingleVideo);
+videoRouter.route("/:id").get(verifyJwt, getsingleVideo);
 videoRouter.route("/like/:id").get(verifyJwt, likeVideo);
 videoRouter.route("/deletelike/:id").delete(verifyJwt, deleteLike);
 videoRouter.route("/countVideo/:id").get(verifyJwt, getUserVideoCount);

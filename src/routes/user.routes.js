@@ -16,7 +16,7 @@ import {
   changeEmail,
   removeCoverImage
 } from "../contollers/user.controller.js";
-// import  {secondUser}  from '../contollers/user.controller.js'
+
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 
