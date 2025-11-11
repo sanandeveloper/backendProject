@@ -26,7 +26,7 @@ videoRouter.route("/upload-video").post(
 );
 
 videoRouter.route("/:id/comments").post(verifyJwt, addComment);
-videoRouter.route("/:id/getcomments").post(getVideoComments );
+videoRouter.route("/:id/getcomments").get(verifyJwt,getVideoComments );
 videoRouter.route("/get-video").get(getAllvideo);
 videoRouter.route("/:id").get(verifyJwt, getsingleVideo);
 videoRouter.route("/like/:id").get(verifyJwt, likeVideo);

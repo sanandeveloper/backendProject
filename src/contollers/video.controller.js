@@ -229,7 +229,7 @@ const getVideoComments=asyncHandler(async(req,res)=>{
        throw new ApiError(404,"video id not found")
      }
   
-      const videoComment= await Comment.find({commentVideo:id})
+      const videoComment= await Comment.find({commentVideo:id}).populate("commentOwner", "username avatar").sort({createdAt:-1})
        const  totalComment= await Comment.countDocuments({commentVideo:id})
        console.log("total comments")
       if (!videoComment) {
